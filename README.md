@@ -24,6 +24,7 @@ elitool/0.0.0 linux-x64 node-v18.13.0
 $ elitool --help [COMMAND]
 USAGE
   $ elitool COMMAND
+  $ elitool resize 
 ...
 ```
 <!-- usagestop -->

@@ -17,8 +17,12 @@
     "/oclif.manifest.json"
   ],
   "dependencies": {
+    "@google-cloud/compute": "^3.7.0",
     "@oclif/core": "^2",
+    "@oclif/plugin-autocomplete": "^1.4.2",
+    "@oclif/plugin-commands": "^2.2.3",
     "@oclif/plugin-help": "^5",
+    "@oclif/plugin-not-found": "^2.3.17",
     "@oclif/plugin-plugins": "^2.2.2"
   },
   "devDependencies": {
@@ -43,7 +47,9 @@
     "commands": "./dist/commands",
     "plugins": [
       "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
+      "@oclif/plugin-not-found",
+      "@oclif/plugin-commands",
+      "@oclif/plugin-autocomplete"
     ],
     "topicSeparator": " ",
     "topics": {
