@@ -15,7 +15,7 @@ export default class List extends Command {
   static args = {}
 
   async run(): Promise<void> {
-    this.log('scheduler list')
+    this.log('scheduler list.ts')
 
     const table = new Table({
       head: [
