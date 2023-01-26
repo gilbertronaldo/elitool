@@ -6,11 +6,13 @@ import * as path from 'node:path'
 export interface ElitoolConfig {
   cloudProvider: string
   cloudProjectId: string
+  cloudRegion: string
 }
 
 export const defaultConfig: ElitoolConfig = {
   cloudProvider: 'gcp',
   cloudProjectId: 'null',
+  cloudRegion: 'asia-southeast2-a',
 }
 
 const configFile = 'config.json'

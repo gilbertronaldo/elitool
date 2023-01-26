@@ -6,7 +6,7 @@ import chalk = require('chalk')
 const Compute = require('@google-cloud/compute')
 
 export default class List extends Command {
-  static description = 'cloud compute list'
+  static description = 'Status Instances'
 
   static examples = [
     '',
@@ -22,10 +22,8 @@ export default class List extends Command {
 
     const instancesClient = new Compute.InstancesClient({
       projectId: config.cloudProjectId,
-      credentials: {},
     })
 
-    // Use the `maxResults` parameter to limit the number of results that the API returns per response page.
     const aggListRequest = instancesClient.aggregatedListAsync({
       project: config.cloudProjectId,
       maxResults: 10,
@@ -40,9 +38,6 @@ export default class List extends Command {
       ],
     })
 
-    // Despite using the `maxResults` parameter, you don't need to handle the pagination
-    // yourself. The returned object handles pagination automatically,
-    // requesting next pages as you iterate over the results.
     let idx = 0
     for await (const aggListRequestElement of aggListRequest) {
       const instances = aggListRequestElement[1].instances

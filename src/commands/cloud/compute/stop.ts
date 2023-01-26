@@ -1,7 +1,7 @@
 import {Command} from '@oclif/core'
 
 export default class Stop extends Command {
-  static description = 'cloud compute stop'
+  static description = 'Stop Instance'
 
   static examples = [
     '',

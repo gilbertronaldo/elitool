@@ -7,10 +7,12 @@ export default class Set extends Command {
   static flags = {
     provider: Flags.string(),
     project_id: Flags.string(),
+    region: Flags.string()
   }
 
   static examples = [
     'set --provider {{ aws | gcp }}',
+    'set --region {{ region }}',
     'set --project_id {{ PROJECT_ID }}',
   ]
 
@@ -20,12 +22,14 @@ export default class Set extends Command {
     const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
     const cloudProvider = res.flags.provider ?? curr.cloudProvider
+    const cloudRegion = res.flags.region ?? curr.cloudRegion
     const cloudProjectId = res.flags.project_id ?
       res.flags.project_id :
       curr.cloudProjectId
     writeConfig(this.config.configDir, {
       cloudProvider,
       cloudProjectId,
+      cloudRegion
     })
   }
 }

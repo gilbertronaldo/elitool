@@ -105,7 +105,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.0
 
 ## `elitool plugins`
 
-List installed plugins.
+Status installed plugins.
 
 ```
 USAGE
@@ -115,7 +115,7 @@ FLAGS
   --core  Show core plugins.
 
 DESCRIPTION
-  List installed plugins.
+  Status installed plugins.
 
 EXAMPLES
   $ elitool plugins

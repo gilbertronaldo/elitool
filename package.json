@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "Elitery Tools Cli",
   "author": "Gilbert Ronaldo @gilbertronaldo",
-  "bin": {
-    "elitool": "./bin/run"
-  },
+  "bin": "./bin/run",
   "homepage": "https://github.com/gilbertronaldo/elitool",
   "license": "MIT",
   "main": "dist/index.js",
@@ -28,7 +26,12 @@
     "chalk": "^4.1.2",
     "cli-table": "^0.3.11",
     "cli-ux": "^6.0.9",
-    "fs-extra": "^11.1.0"
+    "fs-extra": "^11.1.0",
+    "google-auth-library": "^8.7.0",
+    "http": "^0.0.1-security",
+    "open": "^8.4.0",
+    "server-destroy": "^1.0.1",
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@oclif/test": "^2.3.3",
@@ -38,6 +41,7 @@
     "@types/fs-extra": "^11.0.1",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.18.11",
+    "@types/server-destroy": "^1",
     "chai": "^4",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
@@ -60,7 +64,7 @@
     ],
     "topicSeparator": " ",
     "topics": {
-      "account": {
+      "auth": {
         "description": "Manage your account, keys, and metadata"
       },
       "config": {
@@ -68,6 +72,9 @@
       },
       "cloud": {
         "description": "Cloud commands (aws, gcp) for managing instance or etc"
+      },
+      "cloud:compute": {
+        "description": "Read and manipulate Compute Engine / EC2 virtual machine instances"
       },
       "scheduler": {
         "description": "Manage schedule or cronjob from cli (instances restart / resize / etc)"

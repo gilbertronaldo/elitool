@@ -4,7 +4,7 @@ import chalk = require('chalk')
 import Table = require('cli-table');
 
 export default class List extends Command {
-  static description = 'Scheduler List'
+  static description = 'Scheduler Status'
 
   static examples = [
     '',
@@ -15,7 +15,7 @@ export default class List extends Command {
   static args = {}
 
   async run(): Promise<void> {
-    this.log('scheduler list.ts')
+    this.log('scheduler status.ts')
 
     const table = new Table({
       head: [

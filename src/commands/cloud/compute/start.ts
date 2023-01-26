@@ -1,7 +1,9 @@
-import {Command} from '@oclif/core'
+import {Args, Command} from '@oclif/core'
+import {readConfig} from "../../../utils/config";
+import * as Compute from "@google-cloud/compute";
 
 export default class Start extends Command {
-  static description = 'cloud compute start'
+  static description = 'Start Intance'
 
   static examples = [
     '',
@@ -9,9 +11,43 @@ export default class Start extends Command {
 
   static flags = {}
 
-  static args = {}
+  static args = {
+    instanceId: Args.string( {
+      name: 'instanceId',
+      required: true,
+    }),
+  }
 
   async run(): Promise<void> {
     this.log('cloud compute start')
+
+    const config = readConfig(this.config.configDir)
+
+    const {args} = await this.parse(Start)
+
+    const instancesClient = new Compute.InstancesClient()
+
+    const [response] = await instancesClient.start({
+      project: config.cloudProjectId,
+      zone: config.cloudRegion,
+      instance: args.instanceId,
+    })
+
+    let operation = response.latestResponse
+    const operationsClient = new Compute.ZoneOperationsClient();
+
+    // Wait for the operation to complete.
+    while (!operation.done) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line no-await-in-loop
+      [operation] = await operationsClient.wait({
+        operation: operation.name,
+        project: config.cloudProjectId,
+        zone: config.cloudRegion,
+      })
+    }
+
+
   }
 }

@@ -1,7 +1,7 @@
 import {Command} from '@oclif/core'
 
 export default class Resize extends Command {
-  static description = 'cloud compute resize'
+  static description = 'Resize Instance'
 
   static examples = [
     '',
