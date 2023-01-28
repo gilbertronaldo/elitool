@@ -24,45 +24,52 @@ export default class Stop extends Command {
 
     const {args} = await this.parse(Stop)
 
-    let instanceId = args.instanceId
-    if (!instanceId) {
+    let instanceIds = args.instanceId
+    if (!instanceIds) {
       // just prompt for input
-      instanceId = await ux.prompt('Please input instance name')
+      instanceIds = await ux.prompt('Please input instance name/s')
     }
 
-    const instancesClient = new Compute.InstancesClient()
-
-    ux.action.start('Instance stopping')
-
-    try {
-      const [response] = await instancesClient.stop({
-        project: config.cloudProjectId,
-        zone: config.cloudRegion,
-        instance: instanceId,
-      })
-
-      let operation = response.latestResponse
-      const operationsClient = new Compute.ZoneOperationsClient()
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      while (operation.status !== 'DONE') {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        // eslint-disable-next-line no-await-in-loop
-        [operation] = await operationsClient.wait({
-          operation: operation.name,
-          project: config.cloudProjectId,
-          zone: config.cloudRegion,
-        })
+    for (const instanceId of instanceIds.split(',')) {
+      if (!instanceId) {
+        continue
       }
 
-      ux.action.stop()
-      this.log(`Instance [${chalk.green(instanceId)}] successfully stopped.`)
-    } catch {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      if (error?.code === 5) {
-        ux.action.stop(`${chalk.red('ERROR')} instance not found`)
+      const instancesClient = new Compute.InstancesClient()
+
+      ux.action.start(`Instance [${chalk.green(instanceId)}] stopping`)
+
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const [response] = await instancesClient.stop({
+          project: config.cloudProjectId,
+          zone: config.cloudRegion,
+          instance: instanceId,
+        })
+
+        let operation = response.latestResponse
+        const operationsClient = new Compute.ZoneOperationsClient()
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        while (operation.status !== 'DONE') {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          // eslint-disable-next-line no-await-in-loop
+          [operation] = await operationsClient.wait({
+            operation: operation.name,
+            project: config.cloudProjectId,
+            zone: config.cloudRegion,
+          })
+        }
+
+        ux.action.stop()
+        this.log(`Instance [${chalk.green(instanceId)}] successfully stopped.`)
+      } catch {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        if (error?.code === 5) {
+          ux.action.stop(`${chalk.red('ERROR')} instance not found`)
+        }
       }
     }
   }

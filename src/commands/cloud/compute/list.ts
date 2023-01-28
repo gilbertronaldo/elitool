@@ -1,8 +1,7 @@
-import {Command} from '@oclif/core'
-import {readConfig} from '../../../utils/config'
+import {Command, ux} from '@oclif/core'
+import {readConfig, writeConfig} from '../../../utils/config'
 import Table = require('cli-table');
 import chalk = require('chalk')
-
 const Compute = require('@google-cloud/compute')
 
 export default class List extends Command {
@@ -17,15 +16,22 @@ export default class List extends Command {
   static args = {}
 
   async run(): Promise<void> {
-    this.log('Compute list')
     const config = readConfig(this.config.configDir)
 
+    let projectId: string = (!config.cloudProjectId || config.cloudProjectId === 'null' || typeof config.cloudProjectId === 'undefined') ? '' : config.cloudProjectId
+    if (!projectId) {
+      projectId = await ux.prompt('Please input project-id')
+    }
+
+    this.log(`Compute list [${chalk.green(config.cloudProvider)} - ${chalk.green(config.cloudRegion)}]`)
+    this.log(`Project ${chalk.green(projectId)}`)
+
     const instancesClient = new Compute.InstancesClient({
-      projectId: config.cloudProjectId,
+      projectId: projectId,
     })
 
     const aggListRequest = instancesClient.aggregatedListAsync({
-      project: config.cloudProjectId,
+      project: projectId,
       maxResults: 10,
     })
 
@@ -51,5 +57,11 @@ export default class List extends Command {
     }
 
     this.log(table.toString())
+
+    writeConfig(this.config.configDir, {
+      cloudProvider: config.cloudProvider,
+      cloudRegion: config.cloudRegion,
+      cloudProjectId: projectId,
+    })
   }
 }
