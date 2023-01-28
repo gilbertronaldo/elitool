@@ -1,6 +1,6 @@
-import {Args, Command} from '@oclif/core'
-import {readConfig} from "../../../utils/config";
-import * as Compute from "@google-cloud/compute";
+import {Args, Command, ux} from '@oclif/core'
+import {readConfig} from '../../../utils/config'
+import * as Compute from '@google-cloud/compute'
 
 export default class Start extends Command {
   static description = 'Start Intance'
@@ -12,21 +12,20 @@ export default class Start extends Command {
   static flags = {}
 
   static args = {
-    instanceId: Args.string( {
+    instanceId: Args.string({
       name: 'instanceId',
       required: true,
     }),
   }
 
   async run(): Promise<void> {
-    this.log('cloud compute start')
-
     const config = readConfig(this.config.configDir)
 
     const {args} = await this.parse(Start)
 
     const instancesClient = new Compute.InstancesClient()
 
+    ux.action.start('Instance starting..')
     const [response] = await instancesClient.start({
       project: config.cloudProjectId,
       zone: config.cloudRegion,
@@ -34,10 +33,10 @@ export default class Start extends Command {
     })
 
     let operation = response.latestResponse
-    const operationsClient = new Compute.ZoneOperationsClient();
-
-    // Wait for the operation to complete.
-    while (!operation.done) {
+    const operationsClient = new Compute.ZoneOperationsClient()
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    while (operation.status !== 'DONE') {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       // eslint-disable-next-line no-await-in-loop
@@ -48,6 +47,6 @@ export default class Start extends Command {
       })
     }
 
-
+    ux.action.stop('Instance started')
   }
 }
