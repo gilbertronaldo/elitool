@@ -17,7 +17,7 @@ export default class List extends Command {
   static args = {}
 
   async run(): Promise<void> {
-    this.log('cloud compute list')
+    this.log('Compute list')
     const config = readConfig(this.config.configDir)
 
     const instancesClient = new Compute.InstancesClient({
@@ -45,7 +45,7 @@ export default class List extends Command {
       if (instances && instances.length > 0) {
         for (const instance of instances) {
           idx++
-          table.push([idx, instance.name, instance.machineType.match(/\/([^/]+)\/?$/)[1], instance.status])
+          table.push([idx, chalk.green(instance.name), instance.machineType.match(/\/([^/]+)\/?$/)[1], instance.status])
         }
       }
     }
