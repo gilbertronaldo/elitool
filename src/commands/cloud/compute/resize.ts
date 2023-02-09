@@ -4,7 +4,6 @@ import * as Compute from '@google-cloud/compute'
 import Listr = require('listr');
 import chalk = require('chalk');
 import {table} from '@oclif/core/lib/cli-ux/styled/table'
-import flags = table.flags;
 
 export default class Resize extends Command {
   static description = 'Resize Intance'
@@ -32,6 +31,8 @@ export default class Resize extends Command {
     const config = readConfig(this.config.configDir)
 
     const {args, flags} = await this.parse(Resize)
+
+    let disk
 
     let instanceId = args.instanceId
     if (!instanceId) {
@@ -82,6 +83,55 @@ export default class Resize extends Command {
 
               throw new Error(`${chalk.red('ERROR')} instance not found`)
             }
+          }
+        },
+      },
+      {
+        title: 'Instance Snapshot',
+        skip: ctx => ctx.instanceNotFound === true,
+        task: async (ctx, task) => {
+          try {
+            const snapshotsClient = new Compute.SnapshotsClient()
+
+            const disksClient = new Compute.DisksClient();
+            [disk] = await disksClient.get({
+              project: config.cloudProjectId,
+              zone: config.cloudRegion,
+              disk: instanceId,
+            })
+
+            const snapshotResource = {
+              name: `${instanceId}-${new Date().toLocaleString('sv-SE').replace(/[\s:]/g, '-')}`,
+              sourceDisk: disk.selfLink,
+            }
+
+            const [response] = await snapshotsClient.insert({
+              project: config.cloudProjectId,
+              snapshotResource,
+            })
+            let operation = response.latestResponse
+            const operationsClient = new Compute.GlobalOperationsClient()
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            while (operation.status !== 'DONE') {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              // eslint-disable-next-line no-await-in-loop
+              [operation] = await operationsClient.wait({
+                operation: operation.name,
+                project: config.cloudProjectId,
+              })
+            }
+
+            task.output = `Instance [${chalk.green(instanceId)}] successfully make a snapshot.`
+          } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            this.log(error)
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            throw error
           }
         },
       },

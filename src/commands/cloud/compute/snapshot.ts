@@ -4,7 +4,7 @@ import * as Compute from '@google-cloud/compute'
 import chalk = require('chalk')
 
 export default class Start extends Command {
-  static description = 'Start Instance'
+  static description = 'Snapshot Instance'
 
   static examples = [
     '',
@@ -35,19 +35,33 @@ export default class Start extends Command {
         continue
       }
 
-      const instancesClient = new Compute.InstancesClient()
+      const snapshotsClient = new Compute.SnapshotsClient()
 
-      ux.action.start(`Instance [${chalk.green(instanceId)}] starting..`)
+      let disk
+
+      ux.action.start(`Instance [${chalk.green(instanceId)}] snapshot..`)
       try {
+        const disksClient = new Compute.DisksClient();
         // eslint-disable-next-line no-await-in-loop
-        const [response] = await instancesClient.start({
+        [disk] = await disksClient.get({
           project: config.cloudProjectId,
           zone: config.cloudRegion,
-          instance: instanceId,
+          disk: instanceId,
         })
 
+        const snapshotResource = {
+          name: `${instanceId}-${new Date().toLocaleString('sv-SE').replace(/[\s:]/g, '-')}`,
+          sourceDisk: disk.selfLink,
+        }
+
+        // eslint-disable-next-line no-await-in-loop
+        const [response] = await snapshotsClient.insert({
+          project: config.cloudProjectId,
+          snapshotResource,
+        })
         let operation = response.latestResponse
-        const operationsClient = new Compute.ZoneOperationsClient()
+        const operationsClient = new Compute.GlobalOperationsClient()
+
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         while (operation.status !== 'DONE') {
@@ -57,13 +71,13 @@ export default class Start extends Command {
           [operation] = await operationsClient.wait({
             operation: operation.name,
             project: config.cloudProjectId,
-            zone: config.cloudRegion,
           })
         }
 
         ux.action.stop()
-        this.log(`Instance [${chalk.green(instanceId)}] successfully started.`)
+        this.log(`Instance [${chalk.green(instanceId)}] successfully make a snapshot.`)
       } catch (error) {
+        console.log(error)
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if (error?.code === 5) {
