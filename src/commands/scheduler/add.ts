@@ -1,7 +1,10 @@
-import {Command} from '@oclif/core'
-import schedulerApi from '../../api/scheduler-api'
+import {Command, ux} from '@oclif/core'
 
-export default class Add extends Command {
+import {Agenda} from '@hokify/agenda'
+
+const {ServerApiVersion} = require('mongodb')
+
+export default class List extends Command {
   static description = 'Scheduler Add'
 
   static examples = [
@@ -13,15 +16,53 @@ export default class Add extends Command {
   static args = {}
 
   async run(): Promise<void> {
-    // this.log('scheduler add')
+    this.log('Scheduler Add')
+
+    const jobNames = new Set(['instance stop', 'instance start', 'instance resize', 'instance snapshot'])
+    let jobName = ''
+    do {
+      // eslint-disable-next-line no-await-in-loop
+      jobName = await ux.prompt('Please input job name (instance [start|stop|resize|snapshot])')
+    } while (!jobNames.has(jobName))
+
+    let instanceId = ''
+    if (!instanceId) {
+      // just prompt for input
+      instanceId = await ux.prompt('Please input instance name')
+    }
+
+    let scheduleAt = ''
+    if (!scheduleAt) {
+      // just prompt for input
+      scheduleAt = await ux.prompt('Please input schedule time')
+    }
+
+    const mongoConnectionString = 'mongodb+srv://elitool-cluster.z9blta6.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority'
+    const credentials = '/home/gilbert/src/elitery/elitool/X509-cert-8200828602976059425.pem'
+
+    const agenda = new Agenda({
+      db: {
+        address: mongoConnectionString,
+        collection: 'testDB',
+        options: {
+          sslKey: credentials,
+          sslCert: credentials,
+          serverApi: ServerApiVersion.v1,
+          ssl: true,
+        },
+      },
+    })
     //
-    // const {args} = await this.parse(Add)
-    // const todo = args.todo
-    // if (todo) {
-    //   schedulerApi.add(todo)
-    //   // this.log(`${chalk.green('[Success]')} Added new todo: ${todo}`)
-    // } else {
-    //   // this.error(chalk.red('please specify the new todo'))
-    // }
+
+    agenda.on('ready', async () => {
+      await agenda.schedule(scheduleAt, jobName, {instanceId: instanceId})
+      // await agenda.every('2 seconds', 'send email report', {to: 'every 2 second@elitery.com'})
+
+      await agenda.stop()
+
+      console.log('done')
+      // eslint-disable-next-line no-process-exit,unicorn/no-process-exit
+      process.exit(0)
+    })
   }
 }

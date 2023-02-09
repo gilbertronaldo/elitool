@@ -3,7 +3,7 @@ import {readConfig} from '../../../utils/config'
 import * as Compute from '@google-cloud/compute'
 import chalk = require('chalk')
 
-export default class Start extends Command {
+export default class Snapshot extends Command {
   static description = 'Snapshot Instance'
 
   static examples = [
@@ -22,7 +22,7 @@ export default class Start extends Command {
   async run(): Promise<void> {
     const config = readConfig(this.config.configDir)
 
-    const {args} = await this.parse(Start)
+    const {args} = await this.parse(Snapshot)
 
     let instanceIds = args.instanceId
     if (!instanceIds) {
