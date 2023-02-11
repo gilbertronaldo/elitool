@@ -1,7 +1,7 @@
 {
   "name": "elitool",
   "version": "0.0.1",
-  "description": "Elitery Tools Cli",
+  "description": "Eliters CLI",
   "author": "Gilbert Ronaldo @gilbertronaldo",
   "bin": "./bin/run",
   "homepage": "https://github.com/gilbertronaldo/elitool",

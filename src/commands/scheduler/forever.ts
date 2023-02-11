@@ -43,6 +43,7 @@ export default class List extends Command {
       async job => {
         const {instanceId} = job.attrs.data
         console.log(instanceId)
+        await job.remove()
       },
       {priority: 'high', concurrency: 1},
     )
@@ -53,6 +54,7 @@ export default class List extends Command {
         const {instanceId} = job.attrs.data
 
         await Start.run([instanceId])
+        await job.remove()
       },
       {priority: 'high', concurrency: 1},
     )
@@ -63,6 +65,7 @@ export default class List extends Command {
         const {instanceId} = job.attrs.data
 
         await Stop.run([instanceId])
+        await job.remove()
       },
       {priority: 'high', concurrency: 1},
     )
@@ -73,6 +76,7 @@ export default class List extends Command {
         const {instanceId} = job.attrs.data
 
         await Snapshot.run([instanceId])
+        await job.remove()
       },
       {priority: 'high', concurrency: 1},
     )
@@ -83,6 +87,7 @@ export default class List extends Command {
         const {instanceId, instanceSize} = job.attrs.data
 
         await Resize.run([instanceId, '-s', instanceSize])
+        await job.remove()
       },
       {priority: 'high', concurrency: 1},
     )
