@@ -25,17 +25,9 @@ export default class List extends Command {
       jobName = await ux.prompt('Please input job name (instance [start|stop|resize|snapshot])')
     } while (!jobNames.has(jobName))
 
-    let instanceId = ''
-    if (!instanceId) {
-      // just prompt for input
-      instanceId = await ux.prompt('Please input instance name')
-    }
+    const instanceId = await ux.prompt('Please input instance name')
 
-    let scheduleAt = ''
-    if (!scheduleAt) {
-      // just prompt for input
-      scheduleAt = await ux.prompt('Please input schedule time')
-    }
+    const scheduleAt = await ux.prompt('Please input schedule time')
 
     const mongoConnectionString = 'mongodb+srv://elitool-cluster.z9blta6.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority'
     const credentials = '/home/gilbert/src/elitery/elitool/X509-cert-8200828602976059425.pem'

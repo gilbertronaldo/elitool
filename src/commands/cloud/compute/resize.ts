@@ -3,7 +3,6 @@ import {readConfig} from '../../../utils/config'
 import * as Compute from '@google-cloud/compute'
 import Listr = require('listr');
 import chalk = require('chalk');
-import {table} from '@oclif/core/lib/cli-ux/styled/table'
 
 export default class Resize extends Command {
   static description = 'Resize Intance'

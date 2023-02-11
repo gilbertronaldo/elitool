@@ -19,7 +19,7 @@ export default class List extends Command {
   async run(): Promise<void> {
     const config = readConfig(this.config.configDir)
 
-    let projectId: string = (!config.cloudProjectId || config.cloudProjectId === 'null' || typeof config.cloudProjectId === 'undefined') ? '' : config.cloudProjectId
+    let projectId: string = (!config.cloudProjectId || config.cloudProjectId === 'null') ? '' : config.cloudProjectId
     if (!projectId) {
       projectId = await ux.prompt('Please input project-id')
     }
