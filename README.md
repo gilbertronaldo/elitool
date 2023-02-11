@@ -42,8 +42,108 @@ USAGE
 ### Commands
 ___
 <!-- commands -->
+* [`elitool auth status`](#elitool-auth-status)
+* [`elitool cloud compute list`](#elitool-cloud-compute-list)
+* [`elitool cloud compute resize [INSTANCEID]`](#elitool-cloud-compute-resize-instanceid)
+* [`elitool cloud compute snapshot [INSTANCEID]`](#elitool-cloud-compute-snapshot-instanceid)
+* [`elitool cloud compute start [INSTANCEID]`](#elitool-cloud-compute-start-instanceid)
+* [`elitool cloud compute stop [INSTANCEID]`](#elitool-cloud-compute-stop-instanceid)
+* [`elitool cloud sql list`](#elitool-cloud-sql-list)
 * [`elitool commands`](#elitool-commands)
+* [`elitool config get`](#elitool-config-get)
+* [`elitool config set`](#elitool-config-set)
 * [`elitool help [COMMANDS]`](#elitool-help-commands)
+* [`elitool scheduler add`](#elitool-scheduler-add)
+* [`elitool scheduler forever`](#elitool-scheduler-forever)
+* [`elitool scheduler list`](#elitool-scheduler-list)
+* [`elitool scheduler remove`](#elitool-scheduler-remove)
+
+## `elitool auth status`
+
+Current Auth status of Elitool
+
+```
+USAGE
+  $ elitool auth status
+
+DESCRIPTION
+  Current Auth status of Elitool
+```
+
+## `elitool cloud compute list`
+
+Status Instances
+
+```
+USAGE
+  $ elitool cloud compute list
+
+DESCRIPTION
+  Status Instances
+```
+
+## `elitool cloud compute resize [INSTANCEID]`
+
+Resize Intance
+
+```
+USAGE
+  $ elitool cloud compute resize [INSTANCEID] [-s <value>]
+
+FLAGS
+  -s, --instanceSize=<value>  Instance Size
+
+DESCRIPTION
+  Resize Intance
+```
+
+## `elitool cloud compute snapshot [INSTANCEID]`
+
+Snapshot Instance
+
+```
+USAGE
+  $ elitool cloud compute snapshot [INSTANCEID]
+
+DESCRIPTION
+  Snapshot Instance
+```
+
+## `elitool cloud compute start [INSTANCEID]`
+
+Start Instance
+
+```
+USAGE
+  $ elitool cloud compute start [INSTANCEID]
+
+DESCRIPTION
+  Start Instance
+```
+
+## `elitool cloud compute stop [INSTANCEID]`
+
+Stop Intance
+
+```
+USAGE
+  $ elitool cloud compute stop [INSTANCEID]
+
+DESCRIPTION
+  Stop Intance
+```
+
+## `elitool cloud sql list`
+
+Status SQL Instances
+
+```
+USAGE
+  $ elitool cloud sql list
+
+DESCRIPTION
+  Status SQL Instances
+```
 
 ## `elitool commands`
 
@@ -77,6 +177,42 @@ DESCRIPTION
 
 _See code: [@oclif/plugin-commands](https://github.com/oclif/plugin-commands/blob/v2.2.3/src/commands/commands.ts)_
 
+## `elitool config get`
+
+Elitool configuration
+
+```
+USAGE
+  $ elitool config get
+
+DESCRIPTION
+  Elitool configuration
+```
+
+## `elitool config set`
+
+Configure Elitool config.json
+
+```
+USAGE
+  $ elitool config set [--provider <value>] [--project_id <value>] [--region <value>]
+
+FLAGS
+  --project_id=<value>
+  --provider=<value>
+  --region=<value>
+
+DESCRIPTION
+  Configure Elitool config.json
+
+EXAMPLES
+  set --provider {{ aws | gcp }}
+
+  set --region {{ region }}
+
+  set --project_id {{ PROJECT_ID }}
+```
+
 ## `elitool help [COMMANDS]`
 
 Display help for elitool.
@@ -96,6 +232,54 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.1/src/commands/help.ts)_
+
+## `elitool scheduler add`
+
+Scheduler Add
+
+```
+USAGE
+  $ elitool scheduler add
+
+DESCRIPTION
+  Scheduler Add
+```
+
+## `elitool scheduler forever`
+
+Scheduler Forever
+
+```
+USAGE
+  $ elitool scheduler forever
+
+DESCRIPTION
+  Scheduler Forever
+```
+
+## `elitool scheduler list`
+
+Scheduler Status
+
+```
+USAGE
+  $ elitool scheduler list
+
+DESCRIPTION
+  Scheduler Status
+```
+
+## `elitool scheduler remove`
+
+Scheduler Remove
+
+```
+USAGE
+  $ elitool scheduler remove
+
+DESCRIPTION
+  Scheduler Remove
+```
 <!-- commandsstop -->
 
 <br/>
